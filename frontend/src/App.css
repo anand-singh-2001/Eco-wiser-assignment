@@ -1,0 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  background-color: rgb(177, 170, 245) !important;
+}
+
+.css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root {
+  color: black !important;
+  text-shadow: 0 0 5px white;
+}
