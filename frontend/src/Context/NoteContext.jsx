@@ -10,7 +10,7 @@ import {
 import { useSnackbar } from "notistack";
 
 const NoteContext = createContext({});
-const host = "http://localhost:5555/notes";
+const host = "https://note-keeper-jciw.onrender.com/";
 
 export function NoteContextProvider({ children }) {
   const [notes, setNotes] = useState([]);
