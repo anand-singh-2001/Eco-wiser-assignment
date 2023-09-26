@@ -45,6 +45,11 @@ export default function Notes_Container() {
         color="black"
         className="addBook"
       />
+      {notes.length === 0 && (
+        <h1 style={{ fontSize: "40px", margin: "auto" }}>
+          Empty here....Add your notes.
+        </h1>
+      )}
       <div className="my-2 grid lg:grid-rows-2 md:grid-rows-2 sm:grid-rows-3 xs:grid-rows-6 lg:grid-cols-3 md:grid-cols-3 gap-3 sm:grid-cols-2 max-xs:grid-cols-2  border-separate border-spacing-2 bg-opacity-80">
         {notes?.slice((page - 1) * 6, (page - 1) * 6 + 6).map((note, id) => (
           <Box key={id} sx={{ height: "200px", minWidth: "200px" }}>

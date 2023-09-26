@@ -6,20 +6,17 @@ const router = Router();
 router.post("/addnotes", async (request, response) => {
   const { title, tagline, body, pinned } = request.body;
 
-  // console.log("UserId", request.user.id);
-  // const user = request.user.id;
-
   const note = await Note.create({
     title,
     tagline,
     body,
     pinned,
-  }); //creating a new book.
+  });
 
   return response.status(201).send(note);
 });
 
-//Route for getting all the books from the database for the specific user:
+//Route for getting all the books from the database:
 
 router.get("/fetchnotes", async (request, response) => {
   try {
@@ -34,20 +31,6 @@ router.get("/fetchnotes", async (request, response) => {
     response.status(500).send({ message: error.message });
   }
 });
-
-// Route to find a specific book from database by id:
-
-// router.get("/getbook/:id", async (request, response) => {
-//   const { id } = request.params;
-//   try {
-//     const book = await Note.findById(id); //getting the book from the database.
-
-//     return response.status(200).send(book);
-//   } catch (error) {
-//     console.log(error);
-//     response.status(500).send({ message: error.message });
-//   }
-// });
 
 //Route to update an existing book:
 
@@ -76,12 +59,6 @@ router.put("/updatenotes/:id", async (request, response) => {
 router.delete("/deletenotes/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    // const note = await Note.findById(id);
-
-    // //Checking if the book exists:
-    // if (!note) {
-    //   return response.status(404).send({ message: `Note not found` });
-    // }
 
     await Note.findByIdAndDelete(id);
 

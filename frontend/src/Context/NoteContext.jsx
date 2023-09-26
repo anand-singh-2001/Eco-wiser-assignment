@@ -10,7 +10,8 @@ import {
 import { useSnackbar } from "notistack";
 
 const NoteContext = createContext({});
-const host = "https://note-keeper-jciw.onrender.com/";
+
+const host = import.meta.env.VITE_APP_HOST;
 
 export function NoteContextProvider({ children }) {
   const [notes, setNotes] = useState([]);
