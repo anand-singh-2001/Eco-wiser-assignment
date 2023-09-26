@@ -43,7 +43,6 @@ export default function Notes_Container() {
         }}
         size={50}
         color="black"
-        className="addBook"
       />
       {notes.length === 0 && (
         <h1 style={{ fontSize: "40px", margin: "auto" }}>
@@ -106,9 +105,15 @@ export default function Notes_Container() {
                   setCurrNote(note);
                 }}>
                 <Typography sx={{ fontSize: 14 }} gutterBottom>
-                  {note?.tagline}
+                  {note?.tagline / length > 20
+                    ? note.tagline.substr(0, 20) + "..."
+                    : note.tagline}
                 </Typography>
-                <Typography sx={{ fontSize: "25px" }}>{note?.title}</Typography>
+                <Typography sx={{ fontSize: "25px" }}>
+                  {note?.title.legth > 20
+                    ? note.title.substr(0, 20) + "..."
+                    : note.title}
+                </Typography>
 
                 <Typography
                   sx={{
