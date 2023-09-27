@@ -1,6 +1,12 @@
 import axios from "axios";
 import PropTypes from "prop-types";
-import { createContext, useCallback, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useSnackbar } from "notistack";
 
 export const NoteContext = createContext({ notes: [] });
@@ -9,10 +15,12 @@ const host = import.meta.env.VITE_APP_HOST;
 
 export function NoteContextProvider({ children }) {
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
-
+  //Fetching all notes.
   const fetchNotes = useCallback(async () => {
+    setLoading(true);
     const headers = {
       "Content-Type": "application/json",
     };
@@ -28,11 +36,19 @@ export function NoteContextProvider({ children }) {
       const err = error.response.data.errors;
       err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
       throw new Error(error);
+    } finally {
+      setLoading(false);
     }
   }, [enqueueSnackbar]);
+  //Fetchnotes called during mount.
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
 
+  //Add notes
   const addNotes = useCallback(
     async (title, tagline, body) => {
+      setLoading(true);
       const headers = {
         "Content-Type": "application/json",
       };
@@ -47,7 +63,6 @@ export function NoteContextProvider({ children }) {
         });
 
         const newNote = result.data;
-        // console.log(newNote);
 
         setNotes((prev) => [...prev, newNote]);
       } catch (error) {
@@ -55,6 +70,8 @@ export function NoteContextProvider({ children }) {
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
         throw new Error(error);
+      } finally {
+        setLoading(false);
       }
     },
     [enqueueSnackbar]
@@ -64,6 +81,7 @@ export function NoteContextProvider({ children }) {
   // Backend logic:
   const deleteNotes = useCallback(
     async (id) => {
+      setLoading(true);
       const headers = {
         "Content-Type": "application/json",
       };
@@ -77,6 +95,8 @@ export function NoteContextProvider({ children }) {
         console.error(error);
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
+      } finally {
+        setLoading(false);
       }
     },
     [enqueueSnackbar]
@@ -86,6 +106,7 @@ export function NoteContextProvider({ children }) {
   // Backend logic:
   const updateNotes = useCallback(
     async (id, title, tagline, body) => {
+      setLoading(true);
       const headers = {
         "Content-type": "application/json",
       };
@@ -102,10 +123,11 @@ export function NoteContextProvider({ children }) {
           )
         );
       } catch (error) {
-        // console.log(error);
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
         throw new Error(error);
+      } finally {
+        setLoading(false);
       }
     },
     [enqueueSnackbar]
@@ -113,7 +135,6 @@ export function NoteContextProvider({ children }) {
 
   const setPinned = useCallback(
     async (note) => {
-      // console.log(note.title);
       const headers = {
         "Content-type": "application/json",
       };
@@ -123,7 +144,6 @@ export function NoteContextProvider({ children }) {
           headers,
         });
       } catch (error) {
-        // console.log(error);
         enqueueSnackbar(error.response.data.error, { variant: error });
         throw new Error(error);
       }
@@ -147,22 +167,19 @@ export function NoteContextProvider({ children }) {
     [setPinned]
   );
 
-  console.log(notes, "context notes");
   const value = useMemo(
     () => ({
       notes,
-      fetchNotes,
+      loading,
       addNotes,
       deleteNotes,
       updateNotes,
       updatePinned,
     }),
-    [addNotes, updatePinned, deleteNotes, fetchNotes, notes, updateNotes]
+    [notes, loading, addNotes, deleteNotes, updateNotes, updatePinned]
   );
 
   return <NoteContext.Provider value={value}>{children}</NoteContext.Provider>;
 }
-
-// export  NoteContextProvider;
 
 NoteContextProvider.propTypes = { children: PropTypes.node };

@@ -109,35 +109,3 @@ UpdateNote.propTypes = {
   currNote: PropTypes.node,
   onClose: PropTypes.ReactNode,
 };
-{
-  /* <div className=" min-h-[50px]">
-               <label className="text-xl mr-4 text-gray-500">Title</label>
-               <input
-                type="text"
-                value={note.title}
-                name="title"
-                onChange={handleChange}
-                className="border-2 border-gray-500 px-4 py-2 w-full"
-              />
-            </div>
-            <div className=" min-h-[50px]">
-              <label className="text-xl mr-4 text-gray-500">Tagline</label>
-              <input
-                type="text"
-                value={note.tagline}
-                name="tagline"
-                onChange={handleChange}
-                className="border-2 border-gray-500 px-4 py-2 w-full "
-              />
-            </div>
-            <div className="min-h-[50px]">
-              <label className="text-xl mr-4 text-gray-500">Body</label>
-              <textarea
-                type="text"
-                value={note.body}
-                name="body"
-                onChange={handleChange}
-                className="border-2 border-gray-500 px-4 py-2 w-full h-[180px] "
-              />
-            </div>*/
-}

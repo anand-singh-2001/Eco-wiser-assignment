@@ -4,7 +4,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import DeleteNote from "./DeleteNote";
 import UpdateNote from "./UpdateNote";
@@ -16,30 +16,12 @@ import Loading from "../Loading";
 import { Pagination } from "@mui/material";
 
 export default function NotesContainer() {
-  const { notes, updatePinned, fetchNotes } = useNoteContext();
-  console.log(notes, "notessss");
+  const { notes, updatePinned, loading } = useNoteContext();
   const [page, setPage] = useState(1);
-  // const [slicedNotes, setSlicedNotes] = useState([]);
   const [createModal, setCreateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [currNote, setCurrNote] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchNotes();
-    setLoading(false);
-  }, [fetchNotes]);
-
-  // useEffect(() => {
-  //   const start = (page - 1) * 6;
-  //   let end = (page - 1) * 6 + 6;
-  //   if (end > notes.length) {
-  //     end = notes.length;
-  //   }
-  //   setSlicedNotes(notes.slice(start, end));
-  // }, [notes, page]);
 
   const handlePinned = (note) => {
     if (note.pinned) {
@@ -67,7 +49,7 @@ export default function NotesContainer() {
         <Loading />
       ) : (
         <div className="my-2 grid lg:grid-rows-2 md:grid-rows-2 sm:grid-rows-3 xs:grid-rows-6 lg:grid-cols-3 md:grid-cols-3 gap-3 sm:grid-cols-2 max-xs:grid-cols-2  border-separate border-spacing-2 bg-opacity-80">
-          {!loading && notes?.length === 0 && <h1>Empty here....</h1>}
+          {notes?.length === 0 && <h1>Empty here....</h1>}
           {notes
             ?.slice(
               (page - 1) * 6,
@@ -186,7 +168,6 @@ export default function NotesContainer() {
           }}
           count={Math.ceil(notes?.length / 6)}
           onChange={(_, value) => {
-            console.log(value, "page");
             setPage(value);
           }}
         />
