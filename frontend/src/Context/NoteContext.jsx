@@ -40,6 +40,7 @@ export function NoteContextProvider({ children }) {
       setLoading(false);
     }
   }, [enqueueSnackbar]);
+
   //Fetchnotes called during mount.
   useEffect(() => {
     fetchNotes();
@@ -48,7 +49,6 @@ export function NoteContextProvider({ children }) {
   //Add notes
   const addNotes = useCallback(
     async (title, tagline, body) => {
-      setLoading(true);
       const headers = {
         "Content-Type": "application/json",
       };
@@ -70,8 +70,6 @@ export function NoteContextProvider({ children }) {
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
         throw new Error(error);
-      } finally {
-        setLoading(false);
       }
     },
     [enqueueSnackbar]
@@ -81,7 +79,6 @@ export function NoteContextProvider({ children }) {
   // Backend logic:
   const deleteNotes = useCallback(
     async (id) => {
-      setLoading(true);
       const headers = {
         "Content-Type": "application/json",
       };
@@ -95,8 +92,6 @@ export function NoteContextProvider({ children }) {
         console.error(error);
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
-      } finally {
-        setLoading(false);
       }
     },
     [enqueueSnackbar]
@@ -106,7 +101,6 @@ export function NoteContextProvider({ children }) {
   // Backend logic:
   const updateNotes = useCallback(
     async (id, title, tagline, body) => {
-      setLoading(true);
       const headers = {
         "Content-type": "application/json",
       };
@@ -126,8 +120,6 @@ export function NoteContextProvider({ children }) {
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
         throw new Error(error);
-      } finally {
-        setLoading(false);
       }
     },
     [enqueueSnackbar]
