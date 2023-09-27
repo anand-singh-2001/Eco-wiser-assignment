@@ -1,4 +1,4 @@
-const Spinner = () => {
+const Loading = () => {
   return (
     <div className="border border-blue-300 shadow rounded-md p-4 lg:w-[350px] md:w-[350px] sm:w-[400px] xs:w-[60%] min-w-[300px] h-[70%] mx-auto">
       <div className="animate-pulse flex space-x-4">
@@ -18,4 +18,4 @@ const Spinner = () => {
   );
 };
 
-export default Spinner;
+export default Loading;

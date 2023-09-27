@@ -1,9 +1,9 @@
 import { AiOutlineClose } from "react-icons/ai";
 import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
-import { useNoteContext } from "../../Context/NoteContext";
+import { useNoteContext } from "../../hook/useNoteContext";
 import { useState } from "react";
-import Spinner from "../Spinner";
+import Loading from "../Loading";
 
 const DeleteNote = ({ currNote, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ const DeleteNote = ({ currNote, onClose }) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      console.log(currNote);
+      // console.log(currNote);
       await deleteNotes(currNote._id);
       setLoading(false);
       enqueueSnackbar("Note Deleted Successfully", { variant: "success" });
@@ -21,7 +21,7 @@ const DeleteNote = ({ currNote, onClose }) => {
     } catch (error) {
       setLoading(false);
       enqueueSnackbar(error.response.data.error, { variant: "error" });
-      console.log(error);
+      // console.log(error);
     }
   };
   return (
@@ -40,7 +40,7 @@ const DeleteNote = ({ currNote, onClose }) => {
 
         <div className="flex flex-col items-center border-sky-400 rounded-xl  p-8 mx-auto">
           {loading ? (
-            <Spinner />
+            <Loading />
           ) : (
             <>
               <h3 className="text-2xl">

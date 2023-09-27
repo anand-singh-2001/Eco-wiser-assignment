@@ -1,15 +1,9 @@
 import axios from "axios";
 import PropTypes from "prop-types";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import { useSnackbar } from "notistack";
 
-const NoteContext = createContext({});
+export const NoteContext = createContext({ notes: [] });
 
 const host = import.meta.env.VITE_APP_HOST;
 
@@ -75,11 +69,10 @@ export function NoteContextProvider({ children }) {
       };
 
       try {
+        setNotes((prev) => prev.filter((note) => note._id !== id));
         await axios.delete(`${host}/deletenotes/${id}`, {
           headers,
         });
-
-        setNotes((prev) => prev.filter((note) => note._id !== id));
       } catch (error) {
         console.error(error);
         const err = error.response.data.errors;
@@ -109,7 +102,7 @@ export function NoteContextProvider({ children }) {
           )
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         const err = error.response.data.errors;
         err.forEach((er) => enqueueSnackbar(er.msg, { variant: "error" }));
         throw new Error(error);
@@ -120,7 +113,7 @@ export function NoteContextProvider({ children }) {
 
   const setPinned = useCallback(
     async (note) => {
-      console.log(note.title);
+      // console.log(note.title);
       const headers = {
         "Content-type": "application/json",
       };
@@ -130,7 +123,7 @@ export function NoteContextProvider({ children }) {
           headers,
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         enqueueSnackbar(error.response.data.error, { variant: error });
         throw new Error(error);
       }
@@ -138,30 +131,23 @@ export function NoteContextProvider({ children }) {
     [enqueueSnackbar]
   );
 
-  const addPinned = useCallback(
-    async (note, id) => {
-      await setPinned(note);
+  const updatePinned = useCallback(
+    async (note) => {
       setNotes((prev) => {
         const clone = [...prev];
-        clone.splice(0, 0, clone.splice(id, 1));
-        console.log(clone.flat());
-        return clone.flat();
-      });
-    },
-    [setPinned]
-  );
-  const removePinned = useCallback(
-    async (note, id) => {
-      await setPinned(note);
-      setNotes((prev) => {
-        const clone = [...prev];
-        clone[id] = note;
+        const index = clone.findIndex((item) => item._id === note._id);
+        if (index !== -1) {
+          clone[index] = note;
+        }
         clone.sort((a, b) => b.pinned - a.pinned);
         return clone;
       });
+      await setPinned(note);
     },
     [setPinned]
   );
+
+  console.log(notes, "context notes");
   const value = useMemo(
     () => ({
       notes,
@@ -169,25 +155,14 @@ export function NoteContextProvider({ children }) {
       addNotes,
       deleteNotes,
       updateNotes,
-      removePinned,
-      addPinned,
+      updatePinned,
     }),
-    [
-      addNotes,
-      addPinned,
-      deleteNotes,
-      fetchNotes,
-      notes,
-      removePinned,
-      updateNotes,
-    ]
+    [addNotes, updatePinned, deleteNotes, fetchNotes, notes, updateNotes]
   );
 
   return <NoteContext.Provider value={value}>{children}</NoteContext.Provider>;
 }
 
 // export  NoteContextProvider;
-
-export const useNoteContext = () => useContext(NoteContext);
 
 NoteContextProvider.propTypes = { children: PropTypes.node };
